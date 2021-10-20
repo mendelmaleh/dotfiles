@@ -21,11 +21,8 @@ set -o vi
 
 # function to trim dir names
 dirtrim() {
-    # use tilde for $HOME
-    path=${1/#$HOME/\~}
-
     # split by /
-    IFS='/' read -ra parts <<< ${path}
+    IFS='/' read -ra parts <<< "$1"
     len=${#parts[@]}
 
     # print dirs
@@ -46,7 +43,16 @@ dirtrim() {
     fi
 }
 
+# ways to get pwd with tilde:
+# 1. ${PWD/#$HOME/\~}
+# 2. p='\w' echo ${p@P}
+# 3. dirs +0
+
+# (1) has an edge case with other user folders that start with the same name,
+# could be solved with some sort of lookahead. (2) is ugly as it requires a var
+# for the string. (3) requires a subshell, should benchmark eventually.
+
 GREEN="$(tput setaf 2)"
 RESET="$(tput sgr0)"
 
-PS1='\[${GREEN}\]\h\[${RESET}\] $(dirtrim $PWD) \$ '
+PS1='\[${GREEN}\]\h\[${RESET}\] $(dirtrim "$(dirs +0)") \$ '
