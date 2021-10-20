@@ -1559,4 +1559,5 @@ main() {
     done >&6
 }
 
+PF_COL3=4
 main "$@"
