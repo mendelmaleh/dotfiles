@@ -1,30 +1,18 @@
 include ./keybinds.conf
 include ./iceberg.conf
 
+# input
+input type:keyboard {
+    repeat_delay 240
+    repeat_rate 60
+    xkb_numlock enabled
+    # xkb_options "caps:swapescape"
 }
 
-# apps
-set {
-    $term foot
-
-    # note: pass the final command to swaymsg so that the resulting window can be opened
-    # on the original workspace that the command was run on.
-    $menu dmenu_path | dmenu | xargs swaymsg exec --
+input type:mouse {
+    accel_profile flat
+    pointer_accel 0
 }
-
-# launch terminal on start
-exec $term bash -c "pfetch; bash"
-
-### output configuration
-#
-# default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-# output * bg /usr/share/backgrounds/sway/sway_wallpaper_blue_1920x1080.png fill
-#
-# example configuration:
-#
-#   output hdmi-a-1 resolution 1920x1080 position 1920,0
-#
-# you can get the names of your outputs by running: swaymsg -t get_outputs
 
 ### idle configuration
 #
@@ -39,21 +27,13 @@ exec $term bash -c "pfetch; bash"
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. it will also lock your screen before your computer goes to sleep.
 
-### input configuration
-#
-# example configuration:
-#
-#   input "2:14:synps/2_synaptics_touchpad" {
-#       dwt enabled
-#       tap enabled
-#       natural_scroll enabled
-#       middle_emulation enabled
-#   }
-#
-# you can get the names of your inputs by running: swaymsg -t get_inputs
-# read `man 5 sway-input` for more information about this section.
+# apps
+set {
+    $term foot
+    $menu dmenu_path | dmenu | xargs swaymsg exec --
+}
 
-# basic keybindings
+# keybinds
 bindsym {
     # start a terminal
     $mod+Return exec $term
@@ -70,13 +50,6 @@ bindsym {
     # exit sway (logs you out of your wayland session)
     $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
 }
-
-# drag floating windows by holding down $mod and left mouse button.
-# resize them with right mouse button + $mod.
-# despite the name, also works for non-floating windows.
-# change normal to inverse to use left mouse button for resizing and right
-# mouse button for dragging.
-floating_modifier $mod normal
 
 # layout keybinds
 bindsym {
@@ -102,6 +75,9 @@ bindsym {
 
     # move focus to the parent container
     $mod+a focus parent
+
+    # resize containers
+    $mod+r mode "resize"
 }
 
 # scratchpad
@@ -114,9 +90,14 @@ bindsym {
     $mod+minus scratchpad show
 }
 
+# launch terminal on start
+exec $term bash -c "pfetch; bash"
 
-bindsym $mod+r mode "resize"
-
-
+# drag floating windows by holding down $mod and left mouse button.
+# resize them with right mouse button + $mod.
+# despite the name, also works for non-floating windows.
+# change normal to inverse to use left mouse button for resizing and right
+# mouse button for dragging.
+floating_modifier $mod normal
 
 include /etc/sway/config.d/*
