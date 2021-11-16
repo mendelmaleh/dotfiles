@@ -1,4 +1,5 @@
 include ./keybinds.conf
+include ./outputs.conf
 include ./iceberg.conf
 
 # input
@@ -15,22 +16,23 @@ input type:mouse {
 }
 
 ### idle configuration
-#
-# example configuration:
-#
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-#          before-sleep 'swaylock -f -c 000000'
-#
-# this will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. it will also lock your screen before your computer goes to sleep.
+exec swayidle -w timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
+
+# setup monitors
+exec kanshi 2> ~/.local/kanshi.log
+
+# launch terminal on start
+set $term foot
+exec $term bash -c "pfetch; bash"
 
 # apps
-set {
-    $term foot
-    $menu dmenu_path | dmenu | xargs swaymsg exec --
+for_window {
+    [app_id="firefox*"] move container to workspace 3, focus
+    [app_id="zathura*"] move container to workspace 4, focus
+    [app_id="telegram*"] move container to workspace 4, focus
+
+    # for firefox pip mode
+    [title="Picture-in-Picture"] floating enable
 }
 
 # keybinds
@@ -89,9 +91,6 @@ bindsym {
     # if there are multiple scratchpad windows, this command cycles through them.
     $mod+minus scratchpad show
 }
-
-# launch terminal on start
-exec $term bash -c "pfetch; bash"
 
 # drag floating windows by holding down $mod and left mouse button.
 # resize them with right mouse button + $mod.

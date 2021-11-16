@@ -1,0 +1,15 @@
+# main setup
+profile vertical {
+    output "ASUS MG24U 0x0000BA47"
+    output "ASUS MG24U GCLMTF018053"
+
+    exec swaymsg workspace 1 output DP-2
+    exec swaymsg workspace 2 output DP-2
+    exec swaymsg workspace 3 output DP-1
+    exec swaymsg workspace 4 output DP-1
+
+    exec swaymsg workspace 1, move workspace output DP-2
+    exec swaymsg workspace 3, move workspace output DP-1
+
+    exec swaymsg bar main font pango:Dejavu Sans Mono 12px
+}
