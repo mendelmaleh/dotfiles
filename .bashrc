@@ -52,7 +52,4 @@ dirtrim() {
 # could be solved with some sort of lookahead. (2) is ugly as it requires a var
 # for the string. (3) requires a subshell, should benchmark eventually.
 
-GREEN="$(tput setaf 2)"
-RESET="$(tput sgr0)"
-
-PS1='\[${GREEN}\]\h\[${RESET}\] $(dirtrim "$(dirs +0)") \$ '
+PS1='\[\033[32m\]\h\[\033[00m\] $(dirtrim "$(dirs +0)") \$ '
