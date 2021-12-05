@@ -43,14 +43,14 @@ bindsym {
     # kill focused window
     $mod+Shift+q kill
 
-    # start your launcher
-    $mod+d exec $menu
+    # start your launcher - bug with filenames with spaces (works in terminal)
+    $mod+d exec swaymsg exec -- gtk-launch "$(find /usr/share/applications .local/share/applications -name '*.desktop' -not -name '* *' -exec basename -s .desktop {} \; | sort | BEMENU_OPTS=\"--fn 'Dejavu Sans Mono 12px' --tb=#b4be82 --tf=#161821 --fb=#161821 --ff=#c6c8d1 --hb=#8388a388 --hf=#c6c8d1 --nb=#161821 --nf=#c6c8d1\" bemenu -ip launch)"
 
     # reload the configuration file
     $mod+Shift+c reload
 
     # exit sway (logs you out of your wayland session)
-    $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+    $mod+Shift+e exit
 }
 
 # layout keybinds
@@ -90,6 +90,12 @@ bindsym {
     # show the next scratchpad window or hide the focused scratchpad window.
     # if there are multiple scratchpad windows, this command cycles through them.
     $mod+minus scratchpad show
+}
+
+# screenshots
+bindsym {
+    $mod+Shift+p exec grim -- - | wl-copy -t "image/png"
+    $mod+p exec swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp | xargs -I{} grim -g {} - | wl-copy -t "image/png"
 }
 
 # drag floating windows by holding down $mod and left mouse button.
