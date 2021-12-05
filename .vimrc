@@ -17,7 +17,7 @@ call plug#end()
 " storage
 let cache = $HOME."/.local/cache"
 if !isdirectory(cache)
-  call mkdir(cache)
+  call mkdir(cache, "p")
 endif
 
 let &backupdir=cache
