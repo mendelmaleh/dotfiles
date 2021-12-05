@@ -52,4 +52,4 @@ dirtrim() {
 # could be solved with some sort of lookahead. (2) is ugly as it requires a var
 # for the string. (3) requires a subshell, should benchmark eventually.
 
-PS1='\[\033[32m\]\h\[\033[00m\] $(dirtrim "$(dirs +0)") \$ '
+PS1='\[\033[32m\]\H\[\033[00m\] $(dirtrim "$(dirs +0)") \$ '
