@@ -1,3 +1,30 @@
 [user]
 	email = mendelmaleh@gmail.com
 	name = Mendel E.
+[core]
+	editor = vim
+[init]
+	defaultBranch = master
+[alias]
+	ls = !git-ls
+	af = add -f
+	ap = add -p
+	au = add -u
+	co = checkout
+	ci = commit
+	ca = commit --amend --no-edit
+	cm = commit -m
+	cp = cherry-pick
+	df = diff
+	ds = diff --staged
+	dt = diff --stat
+	dc = diff --word-diff-regex=.
+	lg = log --oneline --graph
+	lo = log --oneline -n 10
+	mg = merge --ff-only --no-commit
+	sp = stash push -p
+	st = status
+[pull]
+	rebase = true
+[advice]
+	addIgnoredFile = false
