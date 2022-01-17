@@ -10,6 +10,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'cocopon/iceberg.vim'
+Plug 'airblade/vim-gitgutter'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
@@ -56,10 +57,18 @@ set smartindent
 " search
 nnoremap \\ :noh<cr>  " clear highlighting
 
+" rg
+if executable('rg')
+  let g:gitgutter_grep = 'rg'
+endif
+
+" gitgutter
+let g:gitgutter_signs = 0
+nnoremap <leader>g :GitGutterSignsToggle<CR>
+
 " supertab
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
-
 
 " golang
 let g:go_def_mode = "gopls"
