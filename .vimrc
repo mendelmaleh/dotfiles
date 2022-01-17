@@ -57,6 +57,9 @@ set smartindent
 " search
 nnoremap \\ :noh<cr>  " clear highlighting
 
+" lcs
+nmap <leader>l :set list!<CR>
+
 " rg
 if executable('rg')
   let g:gitgutter_grep = 'rg'
