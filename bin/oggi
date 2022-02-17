@@ -27,7 +27,7 @@ tmpencrypt() {
 	[ "$1" = "$dir"/README.md ] && return
 
 	# re-encrypt only if the new hash is different
-	if [ $(_hash "$2") != "${hashes[$2]}" ]; then
+	if [ "$(_hash "$2")" != "${hashes[$2]}" ]; then
 		_encrypt "$1" < "$2"
 	fi
 }
@@ -36,7 +36,7 @@ loop() {
 	f=$1
 	shift
 
-	for i in $@; do
+	for i in "$@"; do
 		$f "$i" "${tmpfiles[$i]}"
 	done
 }
@@ -47,15 +47,15 @@ edit() {
 	trap "rm -rf $tmpdir" EXIT
 
 	declare -A tmpfiles
-	for i in $@; do
+	for i in "$@"; do
 		tmpfiles[$i]=$tmpdir/$(basename "$i")
 	done
 
 	declare -A hashes
-	loop tmpdecrypt $@
+	loop tmpdecrypt "$@"
 
-	loop tmpencrypt $@
 	vim -o ${tmpfiles[*]}
+	loop tmpencrypt "$@"
 }
 
 dir=~/todo
