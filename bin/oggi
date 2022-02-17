@@ -27,9 +27,7 @@ tmpencrypt() {
 	[ "$1" = "$dir"/README.md ] && return
 
 	# re-encrypt only if the new hash is different
-	if [ "$(_hash "$2")" != "${hashes[$2]}" ]; then
-		_encrypt "$1" < "$2"
-	fi
+	[ "$(_hash "$2")" != "${hashes[$2]}" ] && _encrypt "$1" < "$2" || true
 }
 
 loop() {
