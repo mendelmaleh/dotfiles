@@ -90,7 +90,7 @@ file="$dir/$date.md"
 
 # create encrypted file with template
 if [ ! -f "$file" ]; then
-	encrypt "$file" <<- EOF
+	_encrypt "$file" <<- EOF
 	# $(date +'%Y-%m-%d (%A/%V)' | tr '[:upper:]' '[:lower:]')
 
 	# today
