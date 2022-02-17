@@ -1,0 +1,105 @@
+#!/bin/bash
+# vim: noet
+
+set -eu
+
+declare -A files
+declare -A hashes
+
+loop() {
+	f=$1
+	shift
+
+	for i in $@; do
+		$f $i
+	done
+}
+
+decrypt() {
+	# don't decrypt readme file
+	[ $1 = $dir/README.md ] && files[$1]=$1 && return
+
+	name=$(basename $1)
+	tmpf=$tmpdir/$name
+
+	age -d -i $key -o $tmpf $1
+
+	files[$1]=$tmpf
+	hashes[$tmpf]=$(shasum -a 512 $tmpf | cut -d' ' -f1)
+}
+
+encrypt() {
+	# don't encrypt readme file
+	[ $1 = $dir/README.md ] && return
+
+	name=$(basename $1)
+	tmpf=$tmpdir/$name
+	newh=$(shasum -a 512 $tmpf | cut -d' ' -f1)
+
+	# re-encrypt only if the new hash is different
+	if [ $newh != ${hashes[$tmpf]} ]; then
+		age -R $key.pub -o $dir/$name < $tmpf
+	fi
+}
+
+dir=~/todo
+key=~/keys/todo
+date="$(date +'%Y-%m-%d')"
+git="git -C $dir"
+
+tmpdir=$(mktemp -d)
+trap "rm -rf $tmpdir" EXIT
+
+# create dir and readme
+if [ ! -d $dir ]; then
+	mkdir $dir
+	cat <<- 'EOF' > "$dir/README.md"
+	# todo
+
+	created with [https://git.sr.ht/~mendelmaleh/dotfiles/tree/master/bin/oggi].
+	inspired by [https://ugmonk.com/blogs/journal/analog-the-simplest-productivity-system].
+
+	# signals
+
+	```markdown
+	- todo
+	+ done
+	```
+	EOF
+
+	$git init
+	$git add $dir
+	$git commit -m "Initial commit"
+fi
+
+file="$dir/$date.md"
+
+# create encrypted file with template
+if [ ! -f $file ]; then
+	age -R $key.pub -o $file <<- EOF
+	# $(date +'%Y-%m-%d (%A/%V)' | tr '[:upper:]' '[:lower:]')
+
+	# today
+
+	# next
+
+	# someday
+	EOF
+
+	$git add $file
+fi
+	
+last="$dir/$(ls -c --ignore $date.md $dir | head -1)"
+
+# edit today and yesterday files
+loop decrypt $file $last
+vim -o ${files[$file]} ${files[$last]}
+
+# re-encrypt changed files
+loop encrypt $file $last
+
+# save
+$git add --update
+$git commit -m "$($git status --porcelain | tr -s ' ')"
+
+# git push
