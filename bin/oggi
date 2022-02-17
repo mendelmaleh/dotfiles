@@ -4,31 +4,31 @@
 set -eu
 
 _encrypt() {
-	age -R $key.pub -o $1
+	age -R "$key".pub -o "$1"
 }
 
 _hash() {
-	shasum -a 512 $1 | cut -d' ' -f1
+	shasum -a 512 "$1" | cut -d' ' -f1
 }
 
 # tmpdecrypt takes src and dst paths as args, decrypts and stores the hash.
 tmpdecrypt() {
 	# don't decrypt readme file
-	[ $1 = $dir/README.md ] && return
+	[ "$1" = "$dir"/README.md ] && return
 
-	age -d -i $key -o $2 $1
+	age -d -i "$key" -o "$2" "$1"
 
-	hashes[$2]=$(_hash $2)
+	hashes[$2]=$(_hash "$2")
 }
 
 # tmpencrypt takes src and dst paths as args, compares the hashes and encrypts.
 tmpencrypt() {
 	# don't encrypt readme file
-	[ $1 = $dir/README.md ] && return
+	[ "$1" = "$dir"/README.md ] && return
 
 	# re-encrypt only if the new hash is different
-	if [ $(_hash $2) != ${hashes[$2]} ]; then
-		_encrypt $1 < $2
+	if [ $(_hash "$2") != "${hashes[$2]}" ]; then
+		_encrypt "$1" < "$2"
 	fi
 }
 
@@ -37,7 +37,7 @@ loop() {
 	shift
 
 	for i in $@; do
-		$f $i ${tmpfiles[$i]}
+		$f "$i" "${tmpfiles[$i]}"
 	done
 }
 
@@ -48,13 +48,13 @@ edit() {
 
 	declare -A tmpfiles
 	for i in $@; do
-		tmpfiles[$i]=$tmpdir/$(basename $i)
+		tmpfiles[$i]=$tmpdir/$(basename "$i")
 	done
 
 	declare -A hashes
 	loop tmpdecrypt $@
 
-	vim -o ${tmpfiles[*]}
+	vim -o "${tmpfiles[*]}"
 	loop tmpencrypt $@
 }
 
@@ -91,19 +91,19 @@ fi
 file="$dir/$date.md"
 
 # create encrypted file with template
-if [ ! -f $file ]; then
-	encrypt $file <<- EOF
+if [ ! -f "$file" ]; then
+	encrypt "$file" <<- EOF
 	# $(date +'%Y-%m-%d (%A/%V)' | tr '[:upper:]' '[:lower:]')
 
 	# today
 	EOF
 
-	$git add $file
+	$git add "$file"
 fi
 	
 # last="$dir/$(ls -c --ignore $date.md $dir | head -1)"
 
-edit $file $dir/next.md $dir/someday.md
+edit "$file" $dir/next.md $dir/someday.md
 
 # save
 $git add --update
