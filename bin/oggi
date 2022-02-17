@@ -3,43 +3,57 @@
 
 set -eu
 
-declare -A files
-declare -A hashes
+_encrypt() {
+	age -R $key.pub -o $1
+}
+
+_hash() {
+	shasum -a 512 $1 | cut -d' ' -f1
+}
+
+# tmpdecrypt takes src and dst paths as args, decrypts and stores the hash.
+tmpdecrypt() {
+	# don't decrypt readme file
+	[ $1 = $dir/README.md ] && return
+
+	age -d -i $key -o $2 $1
+
+	hashes[$2]=$(_hash $2)
+}
+
+# tmpencrypt takes src and dst paths as args, compares the hashes and encrypts.
+tmpencrypt() {
+	# don't encrypt readme file
+	[ $1 = $dir/README.md ] && return
+
+	# re-encrypt only if the new hash is different
+	[ $(_hash $2) != ${hashes[$2]} ] && _encrypt $1 < $2
+}
 
 loop() {
 	f=$1
 	shift
 
 	for i in $@; do
-		$f $i
+		$f $i ${tmpfiles[$i]}
 	done
 }
 
-decrypt() {
-	# don't decrypt readme file
-	[ $1 = $dir/README.md ] && files[$1]=$1 && return
+# edit takes a list of files, decrypts them, edits them, re-encrypts them.
+edit() {
+	tmpdir=$(mktemp -d)
+	trap "rm -rf $tmpdir" EXIT
 
-	name=$(basename $1)
-	tmpf=$tmpdir/$name
+	declare -A tmpfiles
+	for i in $@; do
+		tmpfiles[$i]=$tmpdir/$(basename $i)
+	done
 
-	age -d -i $key -o $tmpf $1
+	declare -A hashes
+	loop tmpdecrypt $@
 
-	files[$1]=$tmpf
-	hashes[$tmpf]=$(shasum -a 512 $tmpf | cut -d' ' -f1)
-}
-
-encrypt() {
-	# don't encrypt readme file
-	[ $1 = $dir/README.md ] && return
-
-	name=$(basename $1)
-	tmpf=$tmpdir/$name
-	newh=$(shasum -a 512 $tmpf | cut -d' ' -f1)
-
-	# re-encrypt only if the new hash is different
-	if [ $newh != ${hashes[$tmpf]} ]; then
-		age -R $key.pub -o $dir/$name < $tmpf
-	fi
+	vim -o ${tmpfiles[*]}
+	loop tmpencrypt $@
 }
 
 dir=~/todo
@@ -47,13 +61,10 @@ key=~/keys/todo
 date="$(date +'%Y-%m-%d')"
 git="git -C $dir"
 
-tmpdir=$(mktemp -d)
-trap "rm -rf $tmpdir" EXIT
-
-# create dir and readme
+# create dir, readme, templates and git repo
 if [ ! -d $dir ]; then
 	mkdir $dir
-	cat <<- 'EOF' > "$dir/README.md"
+	cat <<- 'EOF' > $dir/README.md
 	# todo
 
 	created with [https://git.sr.ht/~mendelmaleh/dotfiles/tree/master/bin/oggi].
@@ -67,6 +78,9 @@ if [ ! -d $dir ]; then
 	```
 	EOF
 
+	echo "# next" | _encrypt $dir/next.md
+	echo "# someday" | _encrypt $dir/someday.md
+
 	$git init
 	$git add $dir
 	$git commit -m "Initial commit"
@@ -76,27 +90,18 @@ file="$dir/$date.md"
 
 # create encrypted file with template
 if [ ! -f $file ]; then
-	age -R $key.pub -o $file <<- EOF
+	encrypt $file <<- EOF
 	# $(date +'%Y-%m-%d (%A/%V)' | tr '[:upper:]' '[:lower:]')
 
 	# today
-
-	# next
-
-	# someday
 	EOF
 
 	$git add $file
 fi
 	
-last="$dir/$(ls -c --ignore $date.md $dir | head -1)"
+# last="$dir/$(ls -c --ignore $date.md $dir | head -1)"
 
-# edit today and yesterday files
-loop decrypt $file $last
-vim -o ${files[$file]} ${files[$last]}
-
-# re-encrypt changed files
-loop encrypt $file $last
+edit $file $dir/next.md $dir/someday.md
 
 # save
 $git add --update
