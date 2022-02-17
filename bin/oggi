@@ -54,8 +54,8 @@ edit() {
 	declare -A hashes
 	loop tmpdecrypt $@
 
-	vim -o "${tmpfiles[*]}"
 	loop tmpencrypt $@
+	vim -o ${tmpfiles[*]}
 }
 
 dir=~/todo
