@@ -1,6 +1,6 @@
 # /etc/skel/.bash_profile
 
-PATH=~/bin:~/go/bin:$PATH
+PATH=~/bin:~/go/bin:~/.cargo/bin:$PATH
 EDITOR=vim
 
 # This file is sourced by bash for login shells.  The following line
