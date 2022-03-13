@@ -16,6 +16,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 call plug#begin('~/.vim/plugged')
 Plug 'cocopon/iceberg.vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'plasticboy/vim-markdown'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
@@ -73,6 +74,11 @@ endif
 " gitgutter
 let g:gitgutter_signs = 0
 nnoremap <leader>g :GitGutterSignsToggle<CR>
+
+" markdown
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_formatter = 1
 
 " supertab
 let g:SuperTabDefaultCompletionType = "context"
