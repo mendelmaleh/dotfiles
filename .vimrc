@@ -58,8 +58,6 @@ set wildmode=longest:list
 set tabstop=4
 set shiftwidth=0      " use tabstop
 set softtabstop=-1    " use shiftwidth
-
-set expandtab
 set autoindent
 set smartindent
 
