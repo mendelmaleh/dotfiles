@@ -22,9 +22,13 @@ input type:mouse {
 exec swayidle -w timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 
 
-# launch terminal on start
-set $term foot
-exec $term bash -c "pfetch; bash"
+# launch foot on start
+# set $term foot
+# exec $term bash -c "pfetch; bash"
+
+# launch alacritty on start
+set $term alacritty
+exec $term -e bash -c "pfetch; bash"
 
 # apps
 for_window {
