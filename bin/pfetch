@@ -764,7 +764,8 @@ get_memory() {
     esac
 
     # Convert to GB, rounding up (https://stackoverflow.com/a/2395294)
-    mem_full=$(((mem_full+1023)/1024))
+    # Then round up again to nearest two because corsair is cheap
+    mem_full=$((((mem_full+2047)/1024)/2*2))
     log memory "${mem_used:-?}M / ${mem_full:-?}G" >&6
 }
 
