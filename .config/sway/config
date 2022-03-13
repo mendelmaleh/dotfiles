@@ -15,11 +15,12 @@ input type:mouse {
     pointer_accel 0
 }
 
-### idle configuration
+# setup monitors
+# exec kanshi 2> ~/.local/kanshi.log
+
+# idle configuration
 exec swayidle -w timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 
-# setup monitors
-exec kanshi 2> ~/.local/kanshi.log
 
 # launch terminal on start
 set $term foot
