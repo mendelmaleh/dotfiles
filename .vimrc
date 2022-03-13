@@ -66,6 +66,7 @@ nnoremap \\ :noh<cr>  " clear highlighting
 
 " lcs
 nmap <leader>l :set list!<CR>
+set listchars=tab:▸\ ,eol:¬,space:.
 
 " rg
 if executable('rg')
@@ -108,3 +109,12 @@ function! s:build_go_files()
         call go#cmd#Build(0)
     endif
 endfunction
+
+" other
+command Diff execute 'w !git diff --no-index % -'
+
+" save all and exit
+noremap ZA :wqa<CR>
+
+" easy undo for del
+inoremap <del> <C-g>u<del>
