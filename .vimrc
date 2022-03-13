@@ -43,8 +43,11 @@ set modeline
 set hidden
 set autowrite
 set encoding=utf-8
-set updatetime=100
 set backspace=indent,eol,start
+
+set ttimeout
+set ttimeoutlen=100
+set updatetime=100
 
 " commands
 set ignorecase
