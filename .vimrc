@@ -120,3 +120,7 @@ noremap ZA :wqa<CR>
 
 " easy undo for del
 inoremap <del> <C-g>u<del>
+
+" highlighting
+au bufnewfile,bufread *.tsv set filetype=tsv
+au filetype tsv set ts=8
