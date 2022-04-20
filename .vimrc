@@ -113,6 +113,8 @@ endfunction
 " other
 command Diff execute 'w !git diff --no-index % -'
 
+noremap <leader>d :r !date --iso-8601<CR>
+
 " save all and exit
 noremap ZA :wqa<CR>
 
