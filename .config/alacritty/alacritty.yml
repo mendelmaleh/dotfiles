@@ -1,6 +1,9 @@
 env:
   TERM: xterm-256color
 
+key_bindings:
+  - { key: Return, mods: Control, action: SpawnNewInstance }
+
 window:
   padding:
     x: 5
