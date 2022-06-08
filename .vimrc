@@ -125,14 +125,15 @@ endfunction
 " other
 command Diff execute 'w !git diff --no-index % -'
 
-noremap <leader>d :r !date --iso-8601<CR>
+noremap <leader>d "=strftime('%F')<CR>p
+noremap <leader>m :make<CR>
 
 " save all and exit
 noremap ZA :wqa<CR>
 
-" easy undo for del
+" easy undo for accidental dels
 inoremap <del> <C-g>u<del>
 
 " highlighting
 au bufnewfile,bufread *.tsv set filetype=tsv
-au filetype tsv set ts=8
+au filetype tsv set ts=12
