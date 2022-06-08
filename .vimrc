@@ -87,26 +87,38 @@ let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
 
 " golang
-let g:go_def_mode = "gopls"
-let g:go_info_mode = "gopls"
-let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1
 let g:go_def_mapping_enabled = 0
+let g:go_def_mode = "gopls"
+let g:go_fmt_command = "gopls"
+let g:go_gopls_gofumpt = 1
+let g:go_info_mode = "gopls"
+let g:go_metalinter_autosave = 1
 
 au FileType go nmap <C-]> :GoDef<CR>
 au FileType go nmap <leader>i <Plug>(go-info)
 au FileType go nmap <leader>t <Plug>(go-test)
 au FileType go nmap <leader>c <Plug>(go-coverage-toggle)
-au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>r :<C-u>call <SID>run_go_files()<CR>
 au FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 
-" run :GoBuild :GoTestCompile based on the go file
+" run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
     let l:file = expand('%')
     if l:file =~# '^\f\+_test\.go$'
         call go#test#Test(0, 1)
     elseif l:file =~# '^\f\+\.go$'
         call go#cmd#Build(0)
+    endif
+endfunction
+
+" run :GoRun :GoTest based on the go file
+function! s:run_go_files()
+    let l:file = expand('%')
+    if l:file =~# '^\f\+_test\.go$'
+        call go#test#Test(0, 0)
+    elseif l:file =~# '^\f\+\.go$'
+        call go#cmd#Run(0)
     endif
 endfunction
 
