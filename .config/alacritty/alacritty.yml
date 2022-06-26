@@ -10,7 +10,8 @@ window:
     y: 5
 
 font:
-  family: DejaVu Sans Mono
+  normal:
+    family: DejaVu Sans Mono
 
 # iceberg
 colors:
