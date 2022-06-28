@@ -4,4 +4,5 @@ set -eux
 
 mkdir -p .ssh/config.d
 curl -s "https://api.tailscale.com/api/v2/tailnet/$(git config --get user.email)/devices" -u "$(pass api/tailscale):" | \
-	jq -r '.devices | .[] | "host \(.hostname)\n\thostname \(.addresses[0])" ' | tee .ssh/config.d/tailscale
+	jq -r '.devices | sort_by(.hostname) | .[] | "host \(.hostname)\n\thostname \(.addresses[0])" ' | \
+	tee .ssh/config.d/tailscale
