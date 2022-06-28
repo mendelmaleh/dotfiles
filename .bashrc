@@ -23,6 +23,8 @@ fi
 
 set -o vi
 
+alias tmax="tmux new -A"
+
 # function to trim dir names
 dirtrim() {
     # split by /
