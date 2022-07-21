@@ -23,6 +23,9 @@ fi
 
 set -o vi
 
+alias fd="fd --hidden --no-ignore --ignore-case"
+alias rg="rg --hidden --no-ignore --ignore-case"
+
 alias tmax="tmux new -A"
 
 # function to trim dir names
