@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ! pidof spotifyd >/dev/null; then
+if command -v spotifyd &> /dev/null && ! pidof spotifyd > /dev/null; then
     user="$(pass spotify/user)" 
     password="$(pass spotify/$user)" 
     spotifyd --no-daemon -d $HOSTNAME -u $user -p $password >/dev/null &
