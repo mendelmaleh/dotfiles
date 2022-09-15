@@ -1,3 +1,5 @@
+# vim: ft=conf
+
 include ./keybinds.conf
 include ./outputs.conf
 include ./iceberg.conf
@@ -34,6 +36,7 @@ exec $term -e bash -c "pfetch; bash"
 
 # apps
 for_window {
+    [app_id="qutebrowser*"] move container to workspace 3, focus
     [app_id="firefox*"] move container to workspace 3, focus
     [app_id="zathura*"] move container to workspace 4, focus
     [app_id="telegram*"] move container to workspace 4, focus
