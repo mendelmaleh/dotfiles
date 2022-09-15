@@ -51,7 +51,7 @@ bindsym {
     $mod+Shift+q kill
 
     # start your launcher - bug with filenames with spaces (works in terminal)
-    $mod+d exec swaymsg exec -- gtk-launch "$(find /usr/share/applications .local/share/applications -name '*.desktop' -not -name '* *' -exec basename -s .desktop {} \; | sort | BEMENU_OPTS=\"--fn 'Dejavu Sans Mono 12px' --tb=#b4be82 --tf=#161821 --fb=#161821 --ff=#c6c8d1 --hb=#8388a388 --hf=#c6c8d1 --nb=#161821 --nf=#c6c8d1\" bemenu -ip launch)"
+    $mod+d exec swaymsg exec -- gtk-launch "$(find /usr/share/applications .local/share/applications -name '*.desktop' -not -name '* *' -exec basename -s .desktop {} \; | sort | $bemenu -ip launch)"
 
     # reload the configuration file
     $mod+Shift+c reload
