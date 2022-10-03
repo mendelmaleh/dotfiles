@@ -38,6 +38,10 @@ colorscheme iceberg
 set termguicolors
 set background=dark
 
+" cursors
+let &t_EI = "\1\e[2 q\2"
+let &t_SI = "\1\e[4 q\2"
+
 " settings
 set modeline
 set hidden
