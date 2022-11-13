@@ -28,3 +28,5 @@
 	rebase = true
 [advice]
 	addIgnoredFile = false
+[log]
+	follow = true
