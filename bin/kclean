@@ -1,0 +1,34 @@
+#/usr/bin/env bash
+
+set -eu
+
+RE_ENTRY='(?<=^Boot)[0-9A-F]{4}'
+RE_GENTOO='(?<=Gentoo \()[56]\.[0-9]+\.[0-9]+(?=\))' 
+
+ENTRIES=$(efibootmgr -v | grep -P "$RE_ENTRY")
+
+readarray -t KERNELS < <(echo "$ENTRIES" | grep -Po "$RE_GENTOO" | sort -V)
+
+# index of second to last kernel
+((INDEX=${#KERNELS[@]}-2))
+
+RED='\e[1;31m'
+GREEN='\e[1;32m'
+RESET='\e[0m'
+
+printf "The following kernels will be kept:\n$GREEN${KERNELS[*]:$INDEX}$RESET\n"
+printf "The following kernels will be deleted:\n$RED${KERNELS[*]::$INDEX}$RESET\n"
+
+read -p "Press y to continue: " y
+[ $y = "y" ] || exit
+
+for i in ${KERNELS[*]::$INDEX}; do
+	ENTRY=$(grep -F $i <<< $ENTRIES | grep -Po $RE_ENTRY)
+	SRCS=( /usr/src/linux-${i}-gentoo* )
+	BINS=( /boot/{vmlinuz,config,System.map}-${i}-gentoo* )
+
+	rm -r ${SRCS[@]} ${BINS[@]}
+	efibootmgr -qBb $ENTRY
+
+	# printf "$i: $ENTRY, ${SRCS[*]}, ${BINS[*]}\n"
+done
