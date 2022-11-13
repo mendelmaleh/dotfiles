@@ -25,8 +25,9 @@ set -o vi
 
 alias fd="fd --hidden --no-ignore --ignore-case"
 alias rg="rg --hidden --no-ignore --ignore-case"
+alias diff="diff --color=always --unified"
 
-alias tmax="tmux new -A"
+alias tmax="tmux new -As max"
 
 # function to trim dir names
 dirtrim() {
