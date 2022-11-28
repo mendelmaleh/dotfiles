@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -eux
+
+# update the symlink to the latest kernel
+eselect kernel set $(($(eselect kernel list | wc -l)-1))
+
+cd /usr/src/linux
+[ -d ".git" ] && rm -rf .git
+
+# install repo
+git init .
+git remote add origin git@git.sr.ht:~mendelmaleh/kconfig
+git fetch
+git checkout -f $HOSTNAME
+
+# update configs
+make olddefconfig
+git diff

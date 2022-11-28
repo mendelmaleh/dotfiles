@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -eux
+
+# set directory
+cd "${1:-/usr/src/linux}"
+
+# last kernel version
+file="$(ls -c /boot/vmlinuz* | head -1 | xargs basename)"
+lver="$(echo $file | grep -oE '[56].[0-9]+.[0-9]+')"
+
+# clean, build, reinstall
+make clean
+time make -j$(nproc --all)
+make install
+
+# new kernel version
+file="$(ls -c /boot/vmlinuz* | head -1 | xargs basename)"
+nver="$(echo $file | grep -oE '[56].[0-9]+.[0-9]+')"
+
+# don't update bootloader if the versions are the same
+[ "$nver" = "$lver" ] && exit
+
+# update bootloader
+os=$(grep -oP '^NAME=\K.+' /etc/os-release)
+part="$(df /boot --output=source | tail -1 | xargs readlink -f)"
+
+efibootmgr -c -d "$part" -p 1 -L "$os ($nver)" -l \\"$file"
