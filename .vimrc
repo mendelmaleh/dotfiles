@@ -16,6 +16,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 call plug#begin('~/.vim/plugged')
 Plug 'cocopon/iceberg.vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'kshenoy/vim-signature'
 Plug 'plasticboy/vim-markdown'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -97,7 +98,7 @@ let g:go_def_mode = "gopls"
 let g:go_fmt_command = "gopls"
 let g:go_gopls_gofumpt = 1
 let g:go_info_mode = "gopls"
-let g:go_metalinter_autosave = 1
+" let g:go_metalinter_autosave = 1
 
 au FileType go nmap <C-]> :GoDef<CR>
 au FileType go nmap <leader>i <Plug>(go-info)
