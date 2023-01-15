@@ -1,115 +1,22 @@
 # vim: ft=conf
 
-include ./keybinds.conf
-include ./outputs.conf
 include ./iceberg.conf
-
-# input
-input type:keyboard {
-    repeat_delay 240
-    repeat_rate 60
-    xkb_numlock enabled
-    # xkb_options "caps:swapescape"
-}
-
-input type:mouse {
-    accel_profile flat
-    pointer_accel 0
-}
-
-# setup monitors
-# exec kanshi 2> ~/.local/kanshi.log
-
-# idle configuration
-exec swayidle -w timeout 600 'swaymsg input type:pointer events disabled ; swaymsg "output * dpms off"' resume 'swaymsg input type:pointer events enabled ; swaymsg "output * dpms on"'
-
-# audio
-exec gentoo-pipewire-launcher
-
-# launch foot on start
-# set $term foot
-# exec $term bash -c "pfetch; bash"
+include ./inputs.conf
 
 # launch alacritty on start
 set $term alacritty
 exec $term -e bash -c "pfetch; bash"
 
+include ./keybinds.conf
+
 # apps
 for_window {
-    [app_id="qutebrowser*"] move container to workspace 3, focus
     [app_id="firefox*"] move container to workspace 3, focus
-    [app_id="zathura*"] move container to workspace 4, focus
+    [app_id="qutebrowser*"] move container to workspace 3, focus
+    [app_id="vimb*"] move container to workspace 3, layout tabbed, focus
     [app_id="telegram*"] move container to workspace 4, focus
+    [app_id="zathura*"] move container to workspace 4, focus
 }
 
-# keybinds
-bindsym {
-    # start a terminal
-    $mod+Return exec $term
-
-    # kill focused window
-    $mod+Shift+q kill
-
-    # start your launcher - bug with filenames with spaces (works in terminal)
-    $mod+d exec swaymsg exec -- gtk-launch "$(find /usr/share/applications .local/share/applications -name '*.desktop' -not -name '* *' -exec basename -s .desktop {} \; | sort | $bemenu -ip launch)"
-
-    # reload the configuration file
-    $mod+Shift+c reload
-
-    # exit sway (logs you out of your wayland session)
-    $mod+Shift+e exit
-}
-
-# layout keybinds
-bindsym {
-    # you can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
-    $mod+b splith
-    $mod+v splitv
-
-    # switch the current container between different layout styles
-    $mod+s layout stacking
-    $mod+w layout tabbed
-    $mod+e layout toggle split
-
-    # make the current focus fullscreen
-    $mod+f fullscreen
-
-    # toggle the current focus between tiling and floating mode
-    $mod+Shift+space floating toggle
-
-    # swap focus between the tiling area and the floating area
-    $mod+space focus mode_toggle
-
-    # move focus to the parent container
-    $mod+a focus parent
-
-    # resize containers
-    $mod+r mode "resize"
-}
-
-# scratchpad
-bindsym {
-    # move the currently focused window to the scratchpad
-    $mod+Shift+minus move scratchpad
-
-    # show the next scratchpad window or hide the focused scratchpad window.
-    # if there are multiple scratchpad windows, this command cycles through them.
-    $mod+minus scratchpad show
-}
-
-# screenshots
-bindsym {
-    $mod+Shift+p exec grim -- - | wl-copy -t "image/png"
-    $mod+p exec swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp | xargs -I{} grim -g {} - | wl-copy -t "image/png"
-}
-
-# drag floating windows by holding down $mod and left mouse button.
-# resize them with right mouse button + $mod.
-# despite the name, also works for non-floating windows.
-# change normal to inverse to use left mouse button for resizing and right
-# mouse button for dragging.
-floating_modifier $mod normal
-
+include hosts/`hostname`.conf
 include /etc/sway/config.d/*
