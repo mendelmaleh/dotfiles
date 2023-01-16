@@ -1,0 +1,14 @@
+#!/bin/sh
+
+while true
+do
+	if [ "$HOSTNAME" == "tpad" ]; then
+		battery=$(cat /sys/class/power_supply/BAT1/capacity)
+		extra=$(printf "%d%% | " $battery)
+	fi
+	
+	printf "%s\n" "${extra}$(date +'%Y-%m-%d %H:%M')"
+
+	# align time
+	sleep $((10-$(date +%S)%10))
+done
