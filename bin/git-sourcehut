@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -eux
+
+user=mendelmaleh
+
+provider=$(basename $0 | cut -d'-' -f2)
+case $provider in
+	sourcehut)
+		url="git@git.sr.ht:~$user" ;;
+	github)
+		url="git@github.com:$user" ;;
+esac
+
+case $1 in
+	remote)
+		git remote add origin "$url/${2:-$(basename $PWD)}"
+		git push -u origin master ;;
+	clone)
+		git clone "$url/${2}" ;;
+	*)
+		echo "no $1 subcommand" ;;
+esac
+
