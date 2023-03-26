@@ -1,14 +1,21 @@
 #!/bin/sh
 
+set -x
+
 while true
 do
 	if [ "$HOSTNAME" == "tpad" ]; then
-		battery=$(cat /sys/class/power_supply/BAT1/capacity)
-		extra=$(printf "%d%% | " $battery)
+		capacity=$(printf "%d%%" $(cat /sys/class/power_supply/BAT1/capacity))
+		charging=$(cat /sys/class/power_supply/BAT1/status)
+		[ "$charging" == "Charging" ] && capacity=${capacity}+
+
+		extra=$(printf "%s | " $capacity)
 	fi
 	
-	printf "%s\n" "${extra}$(date +'%Y-%m-%d %H:%M')"
+	date=$(date +'%Y-%m-%d %H:%M')
+	printf "%s\n" "${extra}${date}"
 
-	# align time
-	sleep $((10-$(date +%S)%10))
+	# align time, ensure it's interpreted as base 10
+	sec=10#$(date +%S)
+	sleep $((10-${sec}%10))
 done
