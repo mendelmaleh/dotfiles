@@ -1,15 +1,23 @@
 #!/bin/sh
 
-set -x
-
 while true
 do
-	if [ "$HOSTNAME" == "tpad" ]; then
-		capacity=$(printf "%d%%" $(cat /sys/class/power_supply/BAT1/capacity))
-		charging=$(cat /sys/class/power_supply/BAT1/status)
+	extra=""
+	laptop=false
+
+	case "$HOSTNAME" in
+		air)	laptop=true; bat=BAT0;;
+		tpad)	laptop=true; bat=BAT1;;
+	esac
+
+	if $laptop; then
+		path=/sys/class/power_supply/$bat
+
+		capacity=$(printf "%d%%" $(cat ${path}/capacity))
+		charging=$(cat ${path}/status)
 		[ "$charging" == "Charging" ] && capacity=${capacity}+
 
-		extra=$(printf "%s | " $capacity)
+		extra=${extra}$(printf "%s | " $capacity)
 	fi
 	
 	date=$(date +'%Y-%m-%d %H:%M')
