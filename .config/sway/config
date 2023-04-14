@@ -11,6 +11,7 @@ include ./keybinds.conf
 
 # apps
 for_window {
+    [app_id="chrom*"] move container to workspace 3, focus
     [app_id="firefox*"] move container to workspace 3, focus
     [app_id="qutebrowser*"] move container to workspace 3, focus
     [app_id="vimb*"] move container to workspace 3, layout tabbed, focus
