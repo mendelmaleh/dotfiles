@@ -1,4 +1,6 @@
 $include /etc/inputrc
+set colored-stats on
+set mark-symlinked-directories on
 set show-mode-in-prompt on
 set vi-cmd-mode-string "\1\e[2 q\2"
 set vi-ins-mode-string "\1\e[4 q\2"
