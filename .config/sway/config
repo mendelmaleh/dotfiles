@@ -10,13 +10,17 @@ exec $term -e bash -c "pfetch; bash"
 include ./keybinds.conf
 
 # apps
+set $move move container to workspace
 for_window {
-    [app_id="chrom*"] move container to workspace 3, focus
-    [app_id="firefox*"] move container to workspace 3, focus
-    [app_id="qutebrowser*"] move container to workspace 3, focus
-    [app_id="vimb*"] move container to workspace 3, layout tabbed, focus
-    [app_id="telegram*"] move container to workspace 4, focus
-    [app_id="zathura*"] move container to workspace 4, focus
+	[app_id="chrom*"] $move 3, focus
+	[app_id="firefox*"] $move 3, focus
+	[app_id="qutebrowser*"] $move 3, focus
+	[app_id="vimb*"] $move 3, layout tabbed, focus
+
+	[app_id="telegram*"] $move 4, focus
+	[app_id="zathura*"] $move 4, focus
+
+	[app_id="mpv"] floating enabled
 }
 
 include hosts/`hostname`.conf
