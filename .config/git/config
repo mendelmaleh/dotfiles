@@ -24,6 +24,7 @@
 	mg = merge --ff-only --no-commit
 	sp = stash push -p
 	st = status
+	up = !git pull && git push
 [pull]
 	rebase = true
 [advice]
