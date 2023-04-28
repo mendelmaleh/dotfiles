@@ -1,0 +1,6 @@
+address chat.sr.ht
+nickname mendelmaleh
+password-cmd pass api/sourcehut
+pane-widths {
+	channels 12
+}
