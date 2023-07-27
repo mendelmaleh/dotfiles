@@ -12,10 +12,12 @@ case $provider in
 		url="git@github.com:$user" ;;
 esac
 
+remote="${3:-origin}"
+
 case $1 in
 	remote)
-		git remote add origin "$url/${2:-$(basename $PWD)}"
-		git push -u origin master ;;
+		git remote add $remote "$url/${2:-$(basename $PWD)}"
+		git push -u $remote master ;;
 	clone)
 		git clone "$url/${2}" ;;
 	*)
