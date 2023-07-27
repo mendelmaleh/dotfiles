@@ -27,7 +27,9 @@ alias fd="fd --hidden --no-ignore --ignore-case"
 alias rg="rg --hidden --no-ignore --ignore-case"
 alias diff="diff --color=always --unified"
 
-alias tmax="tmux new -As max"
+tmax() {
+	tmux new -As ${1:-max}
+}
 
 # function to trim dir names
 dirtrim() {
