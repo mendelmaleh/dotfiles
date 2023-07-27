@@ -1,6 +1,6 @@
 #!/bin/sh
 
-(fold --spaces --width 80 | awk '{$1=$1};1') << EOF
+(fold -b -w 80 | awk '{$1=$1};1') << EOF
 Copyright $(date +%Y) $(git config --get user.name) <$(git config --get user.email)>
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
